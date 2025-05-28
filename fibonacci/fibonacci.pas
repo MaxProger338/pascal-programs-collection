@@ -18,7 +18,6 @@ begin
 
 	current := 1;  { first element in fibonacci set equals 1 }
 	prev    := 0;
-	pprev   := 0;
 	{ If a number less than 2, for doesn't work, and than function just returns first element }
 	for i := 2 to n do
 	begin
