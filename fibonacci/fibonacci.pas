@@ -3,6 +3,8 @@
   					By MaxProger338
 }
 program fibonacci;
+uses
+  SysUtils;
 
 { n - a number in fibonacci set ( a zero also supports ) }
 function Fibonacci(n: byte): qword;
@@ -31,10 +33,7 @@ end;
 var
 	n: integer; { number in fibonacci set }
 begin
-	repeat
-		write('Enter number in fibonacci set (not negative): ');
-		readln(n)
-	until n >= 0;
+	n := StrToInt(ParamStr(1));
 
-	writeln(n, ' in fibonacci: ', Fibonacci(n));
+	writeln(n, ' in fibonacci: ', Fibonacci(n))
 end.
