@@ -1,6 +1,10 @@
 program diamond_crt;
 uses
-	crt;
+	crt, linkedlist_word, linkedlist_frame;
+
+begin
+	writeln('kek');
+{
 const
 	MaxHalfHeightOfDiamond = 10;
 	MinHalfHeightOfDiamond = 1;
@@ -11,9 +15,35 @@ const
 type
 	Diamond = record
 		x, y, height: word;  { ^half-height }
-		symbol: char;
-		color, bgcolor: word;
-	end;	
+{		symbol: char;
+{		color, bgcolor: word;
+	end;
+
+	Action = procedure(var myFrame: Frame);
+	Frame = record
+		beginf, endf, currentf: word;
+		params: Nodeptr;
+		action: Action;
+	end;
+
+	Animation = record
+		frames: Nodeptr;
+	end;
+var
+	myAnimation: Animation;
+
+procedure PrintDiamondAnimation(var myAnimation: Animation);
+var
+	frame1: ^Frame;
+begin
+	{--- FRAMES ---}
+{	new(frame1);
+	frame1^.beginf := 1;
+	frame1^.endf   := 1;
+	AddNode(frame1^.params, 
+	
+	AddNode(myAnimation.frames, Pointer(frame1));
+end;
 
 procedure PrintSpaces(n: word);
 var
@@ -24,23 +54,23 @@ begin
 end;
 
 { l - a current line of the diamond }
-procedure PrintLineOfDiamond(l: word; myDiamond: Diamond);
+{procedure PrintLineOfDiamond(l: word; myDiamond: Diamond);
 var
 	saveTextAttr: byte;
 begin
 	saveTextAttr := TextAttr;
 
 	{ write spaces before a first symbol }
-	PrintSpaces(myDiamond.height - l);
+{	PrintSpaces(myDiamond.height - l);
 	TextBackground(myDiamond.bgcolor);
 	TextColor(myDiamond.color);
 	write(myDiamond.symbol);
 
 	{ if l not a first, write spaces and a second symbol again }
-	if l > 1 then
+{	if l > 1 then
 	begin 
-                { 1 + 2(l - 2) = 2*l - 3 }
-		PrintSpaces(2*l - 3);
+		{ 1 + 2(l - 2) = 2*l - 3 }
+{		PrintSpaces(2*l - 3);
 	        write(myDiamond.symbol);
 	end;
 
@@ -50,13 +80,13 @@ end;
 procedure PrintMiddleLineOfDiamond(myDiamond: Diamond);
 begin
 	{ Based on the formula for printing left spaces 
-          (spaces = n - l, where n - a half-height; l - a current line), 
-          and the formula for printing spaces in the center (spaces = 2l - 3), 
-          we should just increase the current line by one to continue the treatment further, 
-          but then we will go beyond the l to n boundaries in the loop (in a procedure PrintDiamond), 
-          so we make the diamond one more by making n + 1 }
+	(spaces = n - l, where n - a half-height; l - a current line), 
+	and the formula for printing spaces in the center (spaces = 2l - 3), 
+	we should just increase the current line by one to continue the treatment further, 
+	but then we will go beyond the l to n boundaries in the loop (in a procedure PrintDiamond), 
+	so we make the diamond one more by making n + 1 }
        
-	myDiamond.height := myDiamond.height + 1;
+{	myDiamond.height := myDiamond.height + 1;
 	PrintLineOfDiamond(myDiamond.height, myDiamond);
 end;
 
@@ -70,23 +100,23 @@ begin
 
 	{ Draw a top part of the diamond }
 	{ replace 2 with 1 to also draw the top corner of a diamond }
-	for l := 1 to n do
+{	for l := 1 to n do
 	begin
 		GoToXY(xd, yd + l - 1);
 		{ All rows except the central line must recede one sivmol more than 
-                  themselves in relation to the central line, 
-                  because the countdown of the position begins from it }
-		PrintSpaces(1);
+		 themselves in relation to the central line, 
+		 because the countdown of the position begins from it }
+{		PrintSpaces(1);
 		PrintLineOfDiamond(l, myDiamond);
 	end;
 	
 	{ Draw a middle part of the diamond }
-	GoToXY(xd, yd + n);
+{	GoToXY(xd, yd + n);
 	PrintMiddleLineOfDiamond(myDiamond);
 
 	{ Draw a bottom part of the diamond }
 	{ replace 2 with 1 to also draw the bottom corner of a diamond }
-	for l := n downto 1 do
+{	for l := n downto 1 do
 	begin
 		GoToXY(xd, yd + n + (n - l) + 1);
 		PrintSpaces(1);
@@ -102,9 +132,9 @@ var
 begin
 	myDiamond.symbol  := ' ';
 	{ Get only a textcolor }
-	myDiamond.color   := TextAttr and textcolorMask;
+{	myDiamond.color   := TextAttr and textcolorMask;
 	{ Get only a bgcolor }
-	myDiamond.bgcolor := TextAttr and bgcolorMask;
+{	myDiamond.bgcolor := TextAttr and bgcolorMask;
 	PrintDiamond(myDiamond);
 end;
 
@@ -124,7 +154,7 @@ var
 	n: word;
 begin
 	{ Increasing a diamond }
-	for n := minHeight to maxHeight do
+{	for n := minHeight to maxHeight do
 	begin
 		HideDiamond(myDiamond);
 		myDiamond.height := n;
@@ -134,7 +164,7 @@ begin
 		HideDiamond(myDiamond);
 	end;
 	{ Shrinking a diamond }
-	for n := maxHeight downto minHeight do
+{	for n := maxHeight downto minHeight do
 	begin
 		HideDiamond(myDiamond);
 		myDiamond.height := n;
@@ -144,6 +174,21 @@ begin
 		HideDiamond(myDiamond);
 	end;
 end;
+
+procedure AnimateFramesLoop(var myAnimation: Animation);
+const
+	animationStep = 1;
+	animationBegin = 1;
+	animationEnd = 1000;
+	animationDelay = 1; { milliseconds }
+{var
+	i: word;
+begin
+	for i := animationBegin to animationEnd do
+		;
+		{ Iterate through an array of frames in our a myAnimation }	
+	{end;}
+{end;
 
 var
 	myDiamond: Diamond;
@@ -162,4 +207,6 @@ begin
 			MinHalfHeightOfDiamond, 
 			MaxHalfHeightOfDiamond);
 	end;
+end.
+}
 end.
