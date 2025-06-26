@@ -14,6 +14,7 @@ begin
 			if printing then writeln;
 			{ Новую строку мы ещё не проверили }
 			checked := false;
+			printing := false
 		end 
 		else 
 		begin
