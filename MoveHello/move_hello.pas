@@ -58,10 +58,10 @@ begin
 	repeat
 		GetKeyCode(c);
 		case c of
-			-75, ord('h'): MoveMsg(x, y, msg, -1, 0);
-			-77, ord('l'): MoveMsg(x, y, msg, 1, 0);
-			-72, ord('k'): MoveMsg(x, y, msg, 0, -1);
-			-80, ord('j'): MoveMsg(x, y, msg, 0, 1);
+			-75, ord('h'): MoveMsg(x, y, msg, -1,  0);
+			-77, ord('l'): MoveMsg(x, y, msg,  1,  0);
+			-72, ord('k'): MoveMsg(x, y, msg,  0, -1);
+			-80, ord('j'): MoveMsg(x, y, msg,  0,  1);
 			ord('s'): ShowMsg(x, y, msg);
 			ord('g'): HideMsg(x, y, msg);
 		end
