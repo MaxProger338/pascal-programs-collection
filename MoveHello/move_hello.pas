@@ -29,12 +29,12 @@ begin
 	GoToXY(1, 1)
 end;
 
-procedure MoveMsg(var x, y: word; msg: string; MoveX, MoveY: integer);
+procedure MoveMsg(var x, y: word; msg: string; dx, dy: integer);
 begin
 	HideMsg(x, y, msg);
 
-	x := x + MoveX;
-	y := y + MoveY;
+	x := x + dx;
+	y := y + dy;
 	if x = 0 then x := ScreenWidth;
 	if y = 0 then y := ScreenHeight;
 	if x > ScreenWidth then x := 1;
@@ -50,20 +50,26 @@ begin
 	if ParamCount <> 1 then halt(1);
 	msg := ParamStr(1);
 	
+	clrscr;	
 	x := (ScreenWidth - ord(msg[0])) div 2;
 	y := ScreenHeight div 2;
-	
-	clrscr;	
 	ShowMsg(x, y, msg);
 	repeat
 		GetKeyCode(c);
 		case c of
-			-75, ord('h'): MoveMsg(x, y, msg, -1,  0);
-			-77, ord('l'): MoveMsg(x, y, msg,  1,  0);
-			-72, ord('k'): MoveMsg(x, y, msg,  0, -1);
-			-80, ord('j'): MoveMsg(x, y, msg,  0,  1);
-			ord('s'): ShowMsg(x, y, msg);
-			ord('g'): HideMsg(x, y, msg);
+			ord('s'): 
+				ShowMsg(x, y, msg);
+			ord('g'): 
+				HideMsg(x, y, msg);
+			-75, ord('h'): 
+				MoveMsg(x, y, msg, -1,  0);
+			-77, ord('l'): 
+				MoveMsg(x, y, msg,  1,  0);
+			-72, ord('k'): 
+				MoveMsg(x, y, msg,  0, -1);
+			-80, ord('j'): 
+				MoveMsg(x, y, msg,  0,  1);
 		end
-	until c = ord('q')	
+	until c = ord('q')
+	clrscr;	
 end.
