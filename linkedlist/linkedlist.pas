@@ -14,14 +14,16 @@ type
 		size: listsize;
 	end;
 
-procedure InitList(var list: TList);
+{ Init the list (zero first, last pointers and its size) }
+procedure LSTInit(var list: TList);
 begin
 	list.first := nil;
 	list.last  := nil;
 	list.size  := 0;
 end;
 
-procedure DeleteList(var list: TList);
+{ Delete the list (if it is empty, she does nothing) }
+procedure LSTDelete(var list: TList);
 var
 	next: nodeptr;
 begin
@@ -31,11 +33,12 @@ begin
 	dispose(list.first);
 	list.first := next;
 	
-	DeleteList(list);
+	LSTDelete(list);
 	list.size := 0;
 end;
 
-procedure AddToBegin(var list: TList; data: nodeval);
+{ Add the node to the begin of the list (if it is empty, she "creates" it) }
+procedure LSTAddToBegin(var list: TList; data: nodeval);
 var
 	newNode: nodeptr;
 begin
@@ -43,11 +46,16 @@ begin
 	newNode^.next := list.first;
 	newNode^.data := data;
 
+	{ If the list is empty }
+	if list.first = nil then 
+		list.last := newNode;
+
 	list.first    := newNode;
 	list.size     := list.size + 1
 end;
 
-procedure AddToEnd(var list: TList; data: nodeval);
+{ Add the node to the end of the list (if it is empty, she "creates" it) }
+procedure LSTAddToEnd(var list: TList; data: nodeval);
 var
 	newNode: nodeptr;
 begin
@@ -59,9 +67,9 @@ begin
 	new(newNode);
 	newNode^.next := nil;
 	newNode^.data := data;
-	{ If list is not empty }
+	{ If the list is not empty }
 	if list.last <> nil 
-		{ If the sheet is empty, it will result in an error } 
+		{ If the list is empty, it will result in an error } 
 		then list.last^.next := newNode
 		{ if it is empty, then the last element will also be the first }
 		else list.first      := newNode;
@@ -70,7 +78,8 @@ begin
 	list.size := list.size + 1;
 end;
 
-procedure SetAt(var list: TList; data: nodeval; index: listsize);
+{ Set node's data by her index startx since 0 (if the index uncorrect - runtime error }
+procedure LSTSetAt(var list: TList; data: nodeval; index: listsize);
 var
 	current: nodeptr;
 begin
@@ -82,45 +91,66 @@ begin
 
 	current    := list.first;
 	list.first := list.first^.next;
-	SetAt(list, data, index - 1);
+	LSTSetAt(list, data, index - 1);
 	list.first := current
 end;
 
-function GetAt(var list: TList; index: listsize): nodeval;
+{ Get node's data by her index starts since 0 (if the index uncorrect - runtime error) }
+function LSTGetAt(var list: TList; index: listsize): nodeval;
 var
 	current: nodeptr;
 begin
 	if index = 0 then 
 	begin
-		GetAt := list.first^.data;
+		LSTGetAt := list.first^.data;
 		exit
 	end;
 	
 	current    := list.first;
 	list.first := list.first^.next;
-	GetAt      := GetAt(list, index - 1);
+	LSTGetAt   := LSTGetAt(list, index - 1);
 	list.first := current
+end;
+
+{ Get a size of list (just reads list.size, because it should be abstraction }
+function LSTGetSize(var list: TList): listsize;
+begin
+	LSTGetSize := list.size
+end;
+
+{ Delete node from begin of list (if the list is empty - runtime error) }
+procedure LSTDeleteFromBegin(var list: TList);
+var
+	second: nodeptr;
+begin
+	second := list.first^.next;
+	dispose(list.first);
+	list.first := second;
+	
+	list.size  := list.size - 1;
+end;
+
+{ Retrun is the list empty (just reads list.size, because it should be abstraction}
+function LSTIsEmpty(var list: TList): boolean;
+begin
+	LSTIsEmpty := list.size = 0;
 end;
 
 var
 	list: TList;
-	n, i: nodeval;
+	i: nodeval;
 begin
-	InitList(list);
+	LSTInit(list);
 
-	while not SeekEof do
-	begin
-		read(n);
-		AddToEnd(list, n)
-	end;
+	LSTAddToBegin(list, 1);
+	LSTAddToBegin(list, 2);
+	LSTAddToEnd(list, 3);
+	LSTAddToEnd(list, 4);
+	LSTSetAt(list, 1, 0);
+	LSTDeleteFromBegin(list);
 
-	writeln('---task 1 ------');
-	for i := list.size - 1 downto 0 do
-		writeln(GetAt(list, i));
+	for i := 0 to LSTGetSize(list) - 1 do
+		writeln(LSTGetAt(list, i));
 
-	writeln('---task 2 ------');
-	for i := 0 to list.size * 2 - 1 do
-		writeln(GetAt(list, i mod list.size));
-	
-	DeleteList(list)
+	LSTDelete(list)
 end.
