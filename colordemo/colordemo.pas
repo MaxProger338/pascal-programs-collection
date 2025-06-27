@@ -30,7 +30,7 @@ end;
 procedure DrawColumnContent(line: integer);
 begin
 	if line = 0
-		then TextColor(AllColors[line + 1])
+		then TextColor(AllColors[1])
 		else TextColor(AllColors[line mod ColorCount + 1]);
 end;
 
