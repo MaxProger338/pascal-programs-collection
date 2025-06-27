@@ -1,7 +1,7 @@
 program LinkedList;
 
 type
-	nodeval = longint;
+	nodeval = Pointer;
 	nodeptr =  ^TNode;
 	TNode = record
 		data: nodeval;
@@ -138,19 +138,16 @@ end;
 
 var
 	list: TList;
-	i: nodeval;
+	s1: string = 'Hi, there';
+	s2: string = 'Hi, here';
+	i: integer;
 begin
 	LSTInit(list);
-
-	LSTAddToBegin(list, 1);
-	LSTAddToBegin(list, 2);
-	LSTAddToEnd(list, 3);
-	LSTAddToEnd(list, 4);
-	LSTSetAt(list, 1, 0);
-	LSTDeleteFromBegin(list);
-
+	LSTAddToEnd(list, @s1);
+	LSTAddToEnd(list, @s2);
+	{ Printing all nodes in the list }
 	for i := 0 to LSTGetSize(list) - 1 do
-		writeln(LSTGetAt(list, i));
+		writeln(String(LSTGetAt(list, i)^));
 
 	LSTDelete(list)
 end.
