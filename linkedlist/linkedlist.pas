@@ -51,6 +51,11 @@ procedure AddToEnd(var list: TList; data: nodeval);
 var
 	newNode: nodeptr;
 begin
+	{* Could be done in another way: 
+	 * Call AddToBegin if the list is empty, 
+	 * and if not, use dispose(list.last^.next); 
+	 * But I found it not concise and impudent
+	 *}
 	new(newNode);
 	newNode^.next := nil;
 	newNode^.data := data;
