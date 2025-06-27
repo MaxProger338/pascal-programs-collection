@@ -19,7 +19,7 @@ procedure LSTInit(var list: TList);
 begin
 	list.first := nil;
 	list.last  := nil;
-	list.size  := 0;
+	list.size  := 0
 end;
 
 { Delete the list (if it is empty, she does nothing) }
@@ -34,7 +34,7 @@ begin
 	list.first := next;
 	
 	LSTDelete(list);
-	list.size := 0;
+	list.size := 0
 end;
 
 { Add the node to the begin of the list (if it is empty, she "creates" it) }
@@ -75,7 +75,7 @@ begin
 		else list.first      := newNode;
 
 	list.last := newNode;
-	list.size := list.size + 1;
+	list.size := list.size + 1
 end;
 
 { Set node's data by her index startx since 0 (if the index uncorrect - runtime error }
@@ -127,27 +127,57 @@ begin
 	dispose(list.first);
 	list.first := second;
 	
-	list.size  := list.size - 1;
+	list.size  := list.size - 1
 end;
 
 { Retrun is the list empty (just reads list.size, because it should be abstraction}
 function LSTIsEmpty(var list: TList): boolean;
 begin
-	LSTIsEmpty := list.size = 0;
+	LSTIsEmpty := list.size = 0
 end;
 
 var
 	list: TList;
-	s1: string = 'Hi, there';
-	s2: string = 'Hi, here';
 	i: integer;
+	n: PInteger;
 begin
+{--- Task 1 ---------------------------------------}
+	writeln('task 1 -------------');
+
 	LSTInit(list);
-	LSTAddToEnd(list, @s1);
-	LSTAddToEnd(list, @s2);
-	{ Printing all nodes in the list }
+	{ Input }
+	while not SeekEof do
+	begin
+		new(n);
+		read(n^);
+		LSTAddToBegin(list, n)
+	end;
+	{ Output }
 	for i := 0 to LSTGetSize(list) - 1 do
-		writeln(String(LSTGetAt(list, i)^));
+		writeln(PInteger(LSTGetAt(list, i))^);
+	{ Cleanup }
+	for i := 0 to LSTGetSize(list) - 1 do
+		dispose(PInteger(LSTGetAt(list, i)));
+
+	LSTDelete(list);
+
+{--- Task 2 ---------------------------------------}
+	writeln('task 2 -------------');
+
+	LSTInit(list);
+	{ Input }
+	while not SeekEof do
+	begin
+		new(n);
+		read(n^);
+		LSTAddToEnd(list, n)
+	end;
+	{ Output }
+	for i := 0 to LSTGetSize(list) * 2 - 1 do
+		writeln(PInteger(LSTGetAt(list, i mod LSTGetSize(list)))^);
+	{ Cleanup }
+	for i := 0 to LSTGetSize(list) - 1 do
+		dispose(PInteger(LSTGetAt(list, i)));
 
 	LSTDelete(list)
 end.
